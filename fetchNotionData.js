@@ -19,11 +19,21 @@ async function fetchAllPages(databaseId) {
       const requestOptions = {
         database_id: databaseId,
         filter: {
-          property: '时间',
-          date: {
-            on_or_after: firstDayOfMonth.toISOString(),
-            before: lastDayOfMonth.toISOString()
-          }
+          and: [
+            {
+              property: '时间',
+              date: {
+                on_or_after: firstDayOfMonth.toISOString(),
+                before: lastDayOfMonth.toISOString()
+              }
+            },
+            {
+              property: '类目',
+              select: {
+                equals: '餐饮'
+              }
+            }
+          ]
         }
       };
       if (startCursor) {
@@ -52,7 +62,7 @@ async function main() {
   const pages = await fetchAllPages(databaseId);
   console.log('Pages fetched:', pages);
 
-  const totalPrice = pages.reduce((acc, page) => {
+  const totalAmount = pages.reduce((acc, page) => {
     const priceProperty = Object.entries(page.properties).find(([key, value]) => key === "价格");
     console.log("Price property:", priceProperty);
     const price = priceProperty ? (priceProperty[1].number !== null ? priceProperty[1].number : 0) : 0;
@@ -60,7 +70,37 @@ async function main() {
     return acc + price;
   }, 0);
 
-  console.log('Total price:', totalPrice);
-}
+  console.log('Total amount spent on food:', totalAmount);
+
+  const expensiveCount = pages.filter((page) => {
+    const priceProperty = Object.entries(page.properties).find(([key, value]) => key === "价格");
+    const price = priceProperty ? (priceProperty[1].number !== null ? priceProperty[1].number : 0) : 0;
+    return price > 500;
+  }).length;
+
+  console.log('Number of expensive expenses:', expensiveCount);
+
+  const foodAmount = pages.reduce((acc, page) => {
+    const priceProperty = Object.entries(page.properties).find(([key, value]) => key === "价格");
+    const price = priceProperty ? (priceProperty[1].number !== null ? priceProperty[1].number : 0) : 0;
+    if (page.properties['类目'].select.name === '餐饮') {
+      return acc + price;
+    }
+    return acc;
+  }, 0);
+
+  console.log('Total amount spent on food:', foodAmount);
+
+  const nonFoodAmount = pages.reduce((acc, page) => {
+    const priceProperty = Object.entries(page.properties).find(([key, value]) => key === "价格");
+    const price = priceProperty ? (priceProperty[1].number !== null ? priceProperty[1].number : 0) : 0;
+    if (page.properties['类目'].select.name !== '非餐饮') {
+       return acc + price;
+     }
+    return acc;
+   }, 0);
+
+    console.log('Total amount spent on non-food items:', nonFoodAmount);
+  }
 
 main();

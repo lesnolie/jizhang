@@ -1,8 +1,7 @@
 const { Client } = require('@notionhq/client');
 
-const databaseId = process.env.NOTION_DATABASE_ID;
-const apiKey = process.env.NOTION_API_KEY;
-
+const databaseId = 'bb00de86cb8b4ec78030c8b49df4154c';
+const apiKey = 'secret_K1ye8VxkZBgAOzYLTJIN2cNuciWZaxcnZcoPQRfY9Ip';
 
 const notion = new Client({ auth: apiKey });
 
@@ -38,29 +37,21 @@ async function fetchAllPages(databaseId) {
   return allResults;
 }
 
-const fs = require('fs');
-
 async function main() {
   const pages = await fetchAllPages(databaseId);
   console.log('Pages fetched:', pages);
 
-   const totalPrice = pages.reduce((acc, page) => {
-    // ...
+  const totalPrice = pages.reduce((acc, page) => {
+    const priceProperty = Object.entries(page.properties).find(([key, value]) => key === "价格");
+    console.log("Price property:", priceProperty);
+    const price = priceProperty ? (priceProperty[1].number !== null ? priceProperty[1].number : 0) : 0;
+    console.log('Page price:', price);
+    return acc + price;
   }, 0);
 
   console.log('Total price:', totalPrice);
-
-  // Create new GitHub Issue with the total price as the issue title
-  const octokit = github.getOctokit(core.getInput('repo_token'));
-  const { context = {} } = github;
-  const { owner, repo } = context.repo || {};
-  const newIssue = await octokit.issues.create({
-    owner,
-    repo,
-    title: `Total Price: ${totalPrice}`,
-  });
-
-  console.log(`New issue created: ${newIssue.data.html_url}`);
 }
 
 main();
+
+

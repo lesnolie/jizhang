@@ -10,6 +10,9 @@ on:
 
 jobs:
   update-database:
+    env:
+      NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+      NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

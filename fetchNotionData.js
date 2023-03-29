@@ -3,6 +3,7 @@ const { Client } = require('@notionhq/client');
 const databaseId = process.env.NOTION_DATABASE_ID;
 const apiKey = process.env.NOTION_API_KEY;
 
+
 const notion = new Client({ auth: apiKey });
 
 async function fetchAllPages(databaseId) {
@@ -43,25 +44,23 @@ async function main() {
   const pages = await fetchAllPages(databaseId);
   console.log('Pages fetched:', pages);
 
-  const totalPrice = pages.reduce((acc, page) => {
-    const priceProperty = Object.entries(page.properties).find(([key, value]) => key === "价格");
-    console.log("Price property:", priceProperty);
-    const price = priceProperty ? (priceProperty[1].number !== null ? priceProperty[1].number : 0) : 0;
-    console.log('Page price:', price);
-    return acc + price;
+   const totalPrice = pages.reduce((acc, page) => {
+    // ...
   }, 0);
 
   console.log('Total price:', totalPrice);
 
-  // 将totalPrice写入到data.json文件，并覆盖原始数据
-  const data = {
-    totalPrice: totalPrice
-  };
-  const jsonData = JSON.stringify(data);
-  const filePath = './data.json'; // 定义文件路径
-  fs.writeFileSync(filePath, jsonData);
+  // Create new GitHub Issue with the total price as the issue title
+  const octokit = github.getOctokit(core.getInput('repo_token'));
+  const { context = {} } = github;
+  const { owner, repo } = context.repo || {};
+  const newIssue = await octokit.issues.create({
+    owner,
+    repo,
+    title: `Total Price: ${totalPrice}`,
+  });
 
-  console.log(`Data saved to ${filePath} file`);
+  console.log(`New issue created: ${newIssue.data.html_url}`);
 }
 
 main();

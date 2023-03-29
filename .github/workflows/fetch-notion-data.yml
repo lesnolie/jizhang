@@ -27,17 +27,17 @@ jobs:
         run: npm install @notionhq/client
       - name: Install dependencies
         run: npm ci
-      - name: Run fetchNotionData.js
-        run: npm run fetch-data
-        env:
-          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
-          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+      - name: Run JS scripts
+        run: |
+          node totalPrice.js
+          node expensive_expenses.js
+          node spent_on_food.js
       - name: Create New Issue
         run: |
-          total_price=$(node fetchNotionData.js | grep "Total price:" | sed "s/Total price://g" | xargs)
-          expensive_count=$(node fetchNotionData.js | grep "Number of expensive expenses:" | sed "s/Number of expensive expenses://g" | xargs)
-          food_amount=$(node fetchNotionData.js | grep "Total amount spent on food:" | sed "s/Total amount spent on food://g" | xargs)
-          nonfood_amount=$(node fetchNotionData.js | grep "Total amount spent on non-food items:" | sed "s/Total amount spent on non-food items://g" | xargs)
+          total_price=$(node totalPrice.js | grep "Total price:" | sed "s/Total price://g" | xargs)
+          expensive_count=$(node expensive_expenses.js | grep "Number of expensive expenses:" | sed "s/Number of expensive expenses://g" | xargs)
+          food_amount=$(node spent_on_food.js | grep "Total amount spent on food:" | sed "s/Total amount spent on food://g" | xargs)
+          nonfood_amount=$(expr $total_price - $food_amount)
           curl -H "Authorization: token ${{ secrets.G_T }}" \
             -X POST https://api.github.com/repos/lesnolie/jizhang/issues \
             -d '{"title":"Monthly expense report","body":"Total price: '$total_price'\nNumber of expensive expenses: '$expensive_count'\nTotal amount spent on food: '$food_amount'\nTotal amount spent on non-food items: '$nonfood_amount'"}'

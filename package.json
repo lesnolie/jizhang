@@ -1,0 +1,3 @@
+"scripts": {
+  "fetch-data": "node fetchNotionData.js"
+},

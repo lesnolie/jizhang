@@ -27,19 +27,3 @@ jobs:
         env:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-      - name: Commit changes
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add data.json
-          git commit -m "Update data.json" || true
-      - name: Push changes
-        uses: stefanzweifel/git-auto-commit-action@v4.11.1
-        with:
-          commit_message: "Update data.json"
-          commit_options: "--no-verify"
-          branch: ${{ github.ref }}
-          pull_branch: ${{ github.ref }}
-          force: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

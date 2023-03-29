@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -18,10 +18,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+      - name: Use Notion API client
+        run: npm install @notionhq/client
       - name: Install dependencies
         run: npm ci
-      - name: Fetch Notion data
-        run: npm run fetch-data
+      - name: Run fetchNotionData.js
+        run: node fetchNotionData.js
         env:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
@@ -32,6 +34,12 @@ jobs:
           git add data.json
           git commit -m "Update data.json" || true
       - name: Push changes
-        uses: ad-m/github-push-action@master
+        uses: stefanzweifel/git-auto-commit-action@v4.11.1
         with:
-          github_token: ${{ secrets.G_T }}
+          commit_message: "Update data.json"
+          commit_options: "--no-verify"
+          branch: ${{ github.ref }}
+          pull_branch: ${{ github.ref }}
+          force: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

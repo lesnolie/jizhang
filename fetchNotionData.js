@@ -5,11 +5,7 @@ const apiKey = process.env.NOTION_API_KEY;
 
 const notion = new Client({ auth: apiKey });
 
-async function fetchAllPages(databaseId) {
-  const date = new Date();
-  const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1).toISOString();
-  const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString();
-
+async function fetchAllPages(databaseId, startDate) {
   let allResults = [];
   let hasNextPage = true;
   let startCursor = null;
@@ -18,17 +14,10 @@ async function fetchAllPages(databaseId) {
     try {
       const requestOptions = {
         database_id: databaseId,
-        filter: {
-          property: 'Date',
-          date: {
-            on_or_after: startOfMonth,
-            on_or_before: endOfMonth
-          }
-        }
-      };
+       }    ;
       if (startCursor) {
-        requestOptions.start_cursor = startCursor;
-      }
+         requestOptions.start_cursor = startCursor;
+       }
       const response = await notion.databases.query(requestOptions);
 
       const data = response;
@@ -45,11 +34,20 @@ async function fetchAllPages(databaseId) {
     }
   }
 
-  return allResults;
+  // 筛选出日期大于等于 startDate 的页面
+  const filteredPages = allResults.filter(page => {
+    const createdTime = page.properties['时间'].created_time;
+    return moment(createdTime).isSameOrAfter(startDate, 'month');
+  });
+
+  return filteredPages;
 }
 
 async function main() {
-  const pages = await fetchAllPages(databaseId);
+  const startDate = moment().startOf('month');  // 当月的开始日期
+  console.log('Start date:', startDate.format());
+
+  const pages = await fetchAllPages(databaseId, startDate);
   console.log('Pages fetched:', pages);
 
   const totalPrice = pages.reduce((acc, page) => {

@@ -1,35 +1,36 @@
-name: Fetch Notion Data
+name: Update Notion Database
 
 on:
-  schedule:
-    - cron: "0 * * * *"
   push:
-    branches: [ main ]
-
-env:
-  NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-  NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
-  fetch_data:
+  update-database:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Node.js
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "16.x"
+          node-version: '14'
       - name: Install dependencies
-        run: npm install
-      - name: Fetch data and save to file
-        run: node fetchNotionData.js
+        run: npm ci
+      - name: Fetch Notion data
+        run: npm run fetch-data
         env:
-          NOTION_DATABASE_ID: ${{ env.NOTION_DATABASE_ID }}
-          NOTION_API_KEY: ${{ env.NOTION_API_KEY }}
-      - name: Commit data file
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+      - name: Commit changes
         run: |
-          git config --global user.name "Github Actions"
-          git config --global user.email "actions@github.com"
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
           git add data.json
-          git commit -m "Update data.json"
-          git push
+          git commit -m "Update data.json" || true
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

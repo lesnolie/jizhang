@@ -1,7 +1,7 @@
 const { Client } = require('@notionhq/client');
 
-const databaseId = process.env.NOTION_DATABASE_ID;
-const apiKey = process.env.NOTION_API_KEY;
+const databaseId = 'bb00de86cb8b4ec78030c8b49df4154c';
+const apiKey = 'secret_K1ye8VxkZBgAOzYLTJIN2cNuciWZaxcnZcoPQRfY9Ip';
 
 const notion = new Client({ auth: apiKey });
 
@@ -36,6 +36,7 @@ async function fetchAllPages(databaseId) {
 
   return allResults;
 }
+const fs = require('fs');
 
 async function main() {
   const pages = await fetchAllPages(databaseId);
@@ -50,8 +51,15 @@ async function main() {
   }, 0);
 
   console.log('Total price:', totalPrice);
+
+  // 将totalPrice写入到data.json文件，并覆盖原始数据
+  const data = {
+    totalPrice: totalPrice
+  };
+  const jsonData = JSON.stringify(data);
+  fs.writeFileSync('data.json', jsonData);
+
+  console.log('Data saved to data.json file');
 }
 
 main();
-
-

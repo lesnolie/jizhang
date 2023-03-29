@@ -5,8 +5,14 @@ const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 const { Client } = require('@notionhq/client');
 
 const databaseId = process.env.NOTION_DATABASE_ID;
-	@@ -14,6 +18,13 @@ async function fetchAllPages(databaseId) {
-    try {
+
+async function fetchAllPages(databaseId) {
+  const notion = new Client({ auth: process.env.NOTION_API_KEY });
+  let startCursor = undefined;
+  let allPages = [];
+
+  try {
+    while (true) {
       const requestOptions = {
         database_id: databaseId,
         filter: {
@@ -19,7 +25,18 @@ const databaseId = process.env.NOTION_DATABASE_ID;
       };
       if (startCursor) {
         requestOptions.start_cursor = startCursor;
-	@@ -38,25 +49,18 @@ async function fetchAllPages(databaseId) {
+      }
+      const response = await notion.databases.query(requestOptions);
+      allPages = allPages.concat(response.results);
+      if (!response.has_more) {
+        break;
+      }
+      startCursor = response.next_cursor;
+    }
+  } catch (error) {
+    console.error('Error fetching pages:', error);
+  }
+  return allPages;
 }
 
 async function main() {

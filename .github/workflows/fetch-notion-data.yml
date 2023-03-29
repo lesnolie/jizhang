@@ -34,7 +34,10 @@ jobs:
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
       - name: Create New Issue
         run: |
+          total_price=$(node fetchNotionData.js | grep "Total price:" | sed "s/Total price://g" | xargs)
+          expensive_count=$(node fetchNotionData.js | grep "Number of expensive expenses:" | sed "s/Number of expensive expenses://g" | xargs)
+          food_amount=$(node fetchNotionData.js | grep "Total amount spent on food:" | sed "s/Total amount spent on food://g" | xargs)
+          nonfood_amount=$(node fetchNotionData.js | grep "Total amount spent on non-food items:" | sed "s/Total amount spent on non-food items://g" | xargs)
           curl -H "Authorization: token ${{ secrets.G_T }}" \
-               -X POST https://api.github.com/repos/lesnolie/jizhang/issues \
-               -d '{"title":"New issue with total price","body":"Total price: '$(node fetchNotionData.js | grep "Total price:" | sed "s/Total price://g" | xargs)'"}'
-
+            -X POST https://api.github.com/repos/lesnolie/jizhang/issues \
+            -d '{"title":"Monthly expense report","body":"Total price: '$total_price'\nNumber of expensive expenses: '$expensive_count'\nTotal amount spent on food: '$food_amount'\nTotal amount spent on non-food items: '$nonfood_amount'"}'

@@ -37,7 +37,7 @@ jobs:
           total_price=$(node totalPrice.js | grep "Total price:" | sed "s/Total price://g" | xargs)
           expensive_count=$(node expensive_expenses.js | grep "Number of expensive expenses:" | sed "s/Number of expensive expenses://g" | xargs)
           food_amount=$(node spent_on_food.js | grep "Total amount spent on food:" | sed "s/Total amount spent on food://g" | xargs)
-          nonfood_amount=$(expr $total_price - $food_amount)
+          nonfood_amount=$(echo "$total_price - $food_amount" | bc)
           curl -H "Authorization: token ${{ secrets.G_T }}" \
             -X POST https://api.github.com/repos/lesnolie/jizhang/issues \
             -d '{"title":"Monthly expense report","body":"Total price: '$total_price'\nNumber of expensive expenses: '$expensive_count'\nTotal amount spent on food: '$food_amount'\nTotal amount spent on non-food items: '$nonfood_amount'"}'

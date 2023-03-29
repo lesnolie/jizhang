@@ -1,7 +1,7 @@
 const { Client } = require('@notionhq/client');
 
-const databaseId = 'bb00de86cb8b4ec78030c8b49df4154c';
-const apiKey = 'secret_K1ye8VxkZBgAOzYLTJIN2cNuciWZaxcnZcoPQRfY9Ip';
+const databaseId = process.env.NOTION_DATABASE_ID;
+const apiKey = process.env.NOTION_API_KEY;
 
 const notion = new Client({ auth: apiKey });
 
@@ -36,6 +36,7 @@ async function fetchAllPages(databaseId) {
 
   return allResults;
 }
+
 const fs = require('fs');
 
 async function main() {
@@ -57,9 +58,10 @@ async function main() {
     totalPrice: totalPrice
   };
   const jsonData = JSON.stringify(data);
-  fs.writeFileSync('data.json', jsonData);
+  const filePath = './data.json'; // 定义文件路径
+  fs.writeFileSync(filePath, jsonData);
 
-  console.log('Data saved to data.json file');
+  console.log(`Data saved to ${filePath} file`);
 }
 
 main();

@@ -1,7 +1,7 @@
 const { Client } = require('@notionhq/client');
 
-const databaseId = 'bb00de86cb8b4ec78030c8b49df4154c';
-const apiKey = 'secret_K1ye8VxkZBgAOzYLTJIN2cNuciWZaxcnZcoPQRfY9Ip';
+const databaseId = process.env.NOTION_DATABASE_ID;
+const apiKey = process.env.NOTION_API_KEY;
 
 const notion = new Client({ auth: apiKey });
 

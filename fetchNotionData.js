@@ -1,5 +1,4 @@
 const { Client } = require('@notionhq/client');
-const moment = require('moment');
 
 const databaseId = process.env.NOTION_DATABASE_ID;
 const apiKey = process.env.NOTION_API_KEY;

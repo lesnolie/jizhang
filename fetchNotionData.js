@@ -38,23 +38,25 @@ async function fetchAllPages(databaseId) {
 }
 
 async function main() {
+  const today = new Date();
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const pages = await fetchAllPages(databaseId);
   console.log('Pages fetched:', pages);
 
-  const currentMonth = moment().startOf('month');
   const totalPrice = pages.reduce((acc, page) => {
-    const createdTime = moment(page.created_time);
-    if (createdTime.isSameOrAfter(currentMonth)) {
-      const priceProperty = Object.entries(page.properties).find(([key, value]) => key === "价格");
-      console.log("Price property:", priceProperty);
-      const price = priceProperty ? (priceProperty[1].number !== null ? priceProperty[1].number : 0) : 0;
-      console.log('Page price:', price);
-      return acc + price;
+    const createdTime = new Date(page.created_time);
+    if (createdTime < firstDayOfMonth) {
+      return acc;
     }
-    return acc;
+    const priceProperty = Object.entries(page.properties).find(([key, value]) => key === '价格');
+    console.log('Price property:', priceProperty);
+    const price = priceProperty ? (priceProperty[1].number !== null ? priceProperty[1].number : 0) : 0;
+    console.log('Page price:', price);
+    return acc + price;
   }, 0);
 
   console.log('Total price:', totalPrice);
+  return totalPrice;
 }
 
-main();
+module.exports = { main };

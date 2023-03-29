@@ -1,11 +1,15 @@
 const { Client } = require('@notionhq/client');
 
-const databaseId = 'bb00de86cb8b4ec78030c8b49df4154c';
-const apiKey = 'secret_K1ye8VxkZBgAOzYLTJIN2cNuciWZaxcnZcoPQRfY9Ip';
+const databaseId = process.env.NOTION_DATABASE_ID;
+const apiKey = process.env.NOTION_API_KEY;
 
 const notion = new Client({ auth: apiKey });
 
 async function fetchAllPages(databaseId) {
+  const date = new Date();
+  const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1).toISOString();
+  const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString();
+
   let allResults = [];
   let hasNextPage = true;
   let startCursor = null;
@@ -14,10 +18,17 @@ async function fetchAllPages(databaseId) {
     try {
       const requestOptions = {
         database_id: databaseId,
-       }    ;
+        filter: {
+          property: 'Date',
+          date: {
+            on_or_after: startOfMonth,
+            on_or_before: endOfMonth
+          }
+        }
+      };
       if (startCursor) {
-         requestOptions.start_cursor = startCursor;
-       }
+        requestOptions.start_cursor = startCursor;
+      }
       const response = await notion.databases.query(requestOptions);
 
       const data = response;

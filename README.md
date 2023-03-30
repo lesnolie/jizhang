@@ -5,7 +5,8 @@
 ## 如何使用这个记账小组件？
 ### 请按照以下步骤使用这个小组件：
 
-1. 安装记账快捷指令：[点击在你的iOS设备上安装快捷指令。](https://www.icloud.com/shortcuts/899a6c3faa4248adb6934292885d3433)
+1. 安装记账快捷指令：- [点击在你的iOS设备上安装快捷指令。](https://www.icloud.com/shortcuts/899a6c3faa4248adb6934292885d3433)
+                   - [记账OPENCAT版](https://t.co/Q3lVOfhZBN)
 2. 在记账快捷指令中输入你的**OpenAI Token**、**Notion API Key**和**Notion 数据库URL的databaseid**（❓前面那串数字）。
 3. 在Notion中创建一个记账页面，包含以下三个属性：**内容（title）**、**类目（select）** 和 **价格（Number）**。
 4. Fork这个仓库，将其复制到你的GitHub帐户中。
@@ -20,6 +21,7 @@
 - 请确保你的Notion数据库具有正确的属性名称和类型，否则数据可能无法正确显示。
 - 如果GitHub TOKEN密钥发生更改，请记得更新Scriptable中的代码以确保小组件能够正常运行。
 - 这个小组件仅提供月度支出概况，如果你需要更详细的数据分析，可以直接查看Notion中的数据库。
+- 记得修改快捷指令名字为记账，才能用hey siri,记账唤醒。
 祝你使用愉快！
 
 ## 最后

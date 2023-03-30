@@ -39,6 +39,6 @@ jobs:
           food_amount=$(node spent_on_food.js | grep "Total amount spent on food:" | sed "s/Total amount spent on food://g" | xargs)
           nonfood_amount=$(echo "$total_price - $food_amount" | bc)
           curl -H "Authorization: token ${{ secrets.G_T }}" \
-          <!-- 注意修改成你自己的issue地址 -->
             -X PATCH https://api.github.com/repos/lesnolie/jizhang/issues/28 \
             -d '{"title":"Monthly expense report","body":"Total price: '$total_price'\nNumber of expensive expenses: '$expensive_count'\nTotal amount spent on food: '$food_amount'\nTotal amount spent on non-food items: '$nonfood_amount'"}'
+# 注意修改你自己的issue地址

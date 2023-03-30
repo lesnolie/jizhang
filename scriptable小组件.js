@@ -1,9 +1,9 @@
-const url = "https://api.github.com/repos/用户名/仓库名/issues?state=all&sort=created&direction=desc&per_page=1";
+const url = "https://api.github.com/repos/用户名/仓库名/issues/28";
 const request = new Request(url);
 request.headers = { "Authorization": "GITHUB_TOKEN" };
 const response = await request.loadJSON();
 
-const issue = response[0];
+const issue = response;
 const body = issue.body;
 
 const getValue = (regex) => {

@@ -1,6 +1,10 @@
 const today = new Date();
 const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+firstDayOfMonth.setHours(0, 0, 0, 0);
+
 const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+lastDayOfMonth.setHours(0, 0, 0, 0);
+
 
 const { Client } = require('@notionhq/client');
 

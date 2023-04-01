@@ -1,3 +1,15 @@
+const today = new Date();
+const timezoneOffset = -480; // 东八区为 UTC+8，即 -480 分钟
+
+const firstDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1, 0, 0, 0) - timezoneOffset * 60 * 1000);
+const lastDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth() + 1, 0, 0, 0, 0) - timezoneOffset * 60 * 1000);
+
+
+
+const { Client } = require('@notionhq/client');
+
+const databaseId = process.env.NOTION_DATABASE_ID;
+
 async function fetchAllPages(databaseId) {
   const notion = new Client({ auth: process.env.NOTION_API_KEY });
   let startCursor = undefined;

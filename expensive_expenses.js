@@ -1,7 +1,5 @@
 const today = new Date();
 const firstDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1, 8));
-const lastDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth() + 1, 1, 8));
-
 
 const { Client } = require('@notionhq/client');
 
@@ -22,9 +20,7 @@ async function fetchAllPages(databaseId) {
         filter: {
           property: '时间',
           date: {
-            on_or_after: firstDayOfMonth.toISOString(),
-            before: lastDayOfMonth.toISOString()
-          }
+            on_or_after: firstDayOfMonth.toISOString()          }
         }
       };
       if (startCursor) {

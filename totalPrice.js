@@ -1,6 +1,9 @@
 const today = new Date();
-const firstDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1, 8));
-const lastDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth() + 1, 0, 8));
+const timezoneOffset = -480; // 东八区为 UTC+8，即 -480 分钟
+
+const firstDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1, 0, 0, 0) - timezoneOffset * 60 * 1000);
+const lastDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth() + 1, 0, 0, 0, 0) - timezoneOffset * 60 * 1000);
+
 
 
 const { Client } = require('@notionhq/client');
@@ -20,7 +23,7 @@ async function fetchAllPages(databaseId) {
           property: '时间',
           date: {
             on_or_after: firstDayOfMonth.toISOString(),
-            before: lastDayOfMonth.toISOString()
+            on_or_before: lastDayOfMonth.toISOString()
           }
         }
       };

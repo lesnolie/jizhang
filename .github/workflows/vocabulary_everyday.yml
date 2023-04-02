@@ -29,5 +29,5 @@ jobs:
           output=$(cat output.txt)
           curl -H "Authorization: token ${{ secrets.G_T }}" \
                -X PATCH https://api.github.com/repos/lesnolie/jizhang/issues/30 \
-               -d "{\"title\":\"Monthly expense report\",\"body\":\"Total price: $total_price\nNumber of expensive expenses: $expensive_count\nTotal amount spent on food: $food_amount\nTotal amount spent on non-food items: $nonfood_amount\"}"
+               -d '{"title":"Japanese Vocabulary", "body":"'"$output"'"}'
 

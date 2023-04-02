@@ -23,15 +23,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run JS script
-        id: get_pages
+        run: node japaneseshengcibiao.js
+      - name: Update Issue
         run: |
-          pages=$(node japaneseshengcibiao.js) # 确保您的脚本输出内容
-          echo "::set-output name=pages::$pages"
-      - name: Create or Update Issue
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          issue-number: 30
-          body: |
-            ${{ steps.get_pages.outputs.pages }}
+          output=$(cat output.txt)
+          curl -H "Authorization: token ${{ secrets.G_T }}" \
+            -X PATCH https://api.github.com/repos/lesnolie/jizhang/issues/30 \
+            -d '{"title":"Japanese Vocabulary", "body":"'"$output"'"}'

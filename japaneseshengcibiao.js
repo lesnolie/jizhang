@@ -1,6 +1,6 @@
 const { Client } = require('@notionhq/client');
 
-const databaseId = process.env.NOTION_DATABASE_ID2;
+const databaseId = process.env.NOTION_DATABASE_JPID;
 const axios = require("axios");
 
 async function getRandomPagesFromDatabase(databaseId) {

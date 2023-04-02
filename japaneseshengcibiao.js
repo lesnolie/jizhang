@@ -1,9 +1,8 @@
 const fs = require("fs");
-
 const { Client } = require('@notionhq/client');
-
 const databaseId = process.env.NOTION_DATABASE_JPID;
 const axios = require("axios");
+
 
 async function getRandomPagesFromDatabase(databaseId) {
   const notion = new Client({ auth: process.env.NOTION_API_KEY });
@@ -32,7 +31,7 @@ async function getRandomPagesFromDatabase(databaseId) {
     console.error("Error fetching pages from database:", error);
   }
 }
-async function displayRandomPagesAttributes(databaseId) {
+async function displayRandomPagesAttributes() {
   const randomPages = await getRandomPagesFromDatabase(databaseId);
 
   let outputContent = "";
@@ -55,7 +54,7 @@ async function displayRandomPagesAttributes(databaseId) {
   fs.writeFileSync("output.txt", outputContent, "utf-8");
   return outputContent;
 }
-
+displayRandomPagesAttributes();
 
 
 

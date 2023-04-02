@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const { Client } = require('@notionhq/client');
 
 const databaseId = process.env.NOTION_DATABASE_JPID;

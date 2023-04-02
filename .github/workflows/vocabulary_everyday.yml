@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '14'
       - name: Use Notion API client
-        run: npm install @notionhq/client
+        run: npm install @notionhq/client axios # 添加 axios 到安装列表
       - name: Install dependencies
         run: npm ci
       - name: Run JS script
@@ -30,7 +30,7 @@ jobs:
       - name: Create or Update Issue
         uses: peter-evans/create-or-update-comment@v1
         with:
-          token: ${{ secrets.G_T }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           issue-number: 30
           body: |

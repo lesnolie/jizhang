@@ -1,0 +1,37 @@
+name: Update Notion Pages on Issue
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天运行一次
+  workflow_dispatch:
+
+jobs:
+  update-issue:
+    env:
+      NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID2 }}
+      NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Use Notion API client
+        run: npm install @notionhq/client
+      - name: Install dependencies
+        run: npm ci
+      - name: Run JS script
+        id: get_pages
+        run: |
+          pages=$(node japaneseshengcibiao.js) # 确保您的脚本输出内容
+          echo "::set-output name=pages::$pages"
+      - name: Create or Update Issue
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.G_T }}
+          repository: ${{ github.repository }}
+          issue-number: 30
+          body: |
+            ${{ steps.get_pages.outputs.pages }}

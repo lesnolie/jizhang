@@ -8,7 +8,7 @@ on:
 jobs:
   update-issue:
     env:
-      NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_JPID }}
+      NOTION_DATABASE_JPID: ${{ secrets.NOTION_DATABASE_JPID }}
       NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
     runs-on: ubuntu-latest
     steps:

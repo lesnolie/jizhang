@@ -32,34 +32,31 @@ async function getRandomPagesFromDatabase(databaseId) {
 }
 async function displayRandomPagesAttributes(databaseId) {
   const randomPages = await getRandomPagesFromDatabase(databaseId);
+  let output = "";
 
   randomPages.forEach((page, index) => {
-    console.log(`Page ${index + 1} attributes:`);
+    output += `Page ${index + 1} attributes:\n`;
 
     for (const [key, value] of Object.entries(page.properties)) {
-      // 跳过 created_time 属性
       if (value.type === "created_time") continue;
 
-      // 显示 rich_text 和 title 类型属性的 content 值
       if (value.type === "rich_text" || value.type === "title") {
-        console.log(`  ${key}: ${value[value.type][0].text.content}`);
+        output += `  ${key}: ${value[value.type][0].text.content}\n`;
       }
     }
 
-    console.log("\n");
+    output += "\n";
   });
+
+  return output;
 }
 
-
-
-
 // 用你的数据库 ID 替换 `YOUR_DATABASE_ID`
-displayRandomPagesAttributes(databaseId);
-
-
-
-
-
+(async () => {
+  const result = await displayRandomPagesAttributes(databaseId);
+  console.log(result);
+  fs.writeFileSync("output.txt", result);
+})();
 
 
 

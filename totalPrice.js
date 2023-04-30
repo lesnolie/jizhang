@@ -1,5 +1,7 @@
 const today = new Date();
- const firstDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1, 8));
+const currentMonth = today.getMonth();
+const currentYear = today.getFullYear();
+const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
 console.log('First day of month:', firstDayOfMonth.toISOString());
 
  const { Client } = require('@notionhq/client');

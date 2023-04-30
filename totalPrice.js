@@ -1,6 +1,6 @@
 const today = new Date();
  const firstDayOfMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1, 8));
-
+console.log('First day of month:', firstDayOfMonth.toISOString());
 
  const { Client } = require('@notionhq/client');
 const databaseId = process.env.NOTION_DATABASE_ID;

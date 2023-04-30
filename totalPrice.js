@@ -2,7 +2,7 @@ const today = new Date();
 const currentMonth = today.getMonth();
 const currentYear = today.getFullYear();
 const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-console.log('First day of month:', firstDayOfMonth.toISOString());
+console.log('First day of month:', firstDayOfMonth.toLocaleDateString());
 
  const { Client } = require('@notionhq/client');
 const databaseId = process.env.NOTION_DATABASE_ID;

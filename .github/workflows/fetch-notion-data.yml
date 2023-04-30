@@ -15,6 +15,8 @@ jobs:
       NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
     runs-on: ubuntu-latest
     steps:
+      - name: set time zone
+        run: sudo timedatectl set-timezone Asia/Shanghai
       - name: Install curl
         run: sudo apt-get install curl
       - name: Checkout code

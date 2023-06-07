@@ -13,7 +13,7 @@ jobs:
     env:
       NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
       NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: set time zone
         run: sudo timedatectl set-timezone Asia/Shanghai

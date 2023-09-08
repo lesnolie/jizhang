@@ -10,6 +10,8 @@ jobs:
         steps:
         - name: checkout
           uses: actions/checkout@master
+          with:
+            token: ${{ secrets.REPO_ACCESS_TOKEN }}
         - name: Make commits
           run: |
               echo "avoid" >> avoid.txt

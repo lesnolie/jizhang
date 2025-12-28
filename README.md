@@ -79,7 +79,11 @@
 
 ### 4. 配置 iOS 快捷指令
 
-创建一个快捷指令，发送 POST 请求到你的 Worker：
+创建一个快捷指令，发送 POST 请求到你的 Worker。参考示例：
+
+![快捷指令配置示例](shortcut-example.jpg)
+
+配置说明：
 
 ```
 URL: https://你的worker.workers.dev/add?key=你的API_SECRET

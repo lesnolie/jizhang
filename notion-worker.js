@@ -120,21 +120,45 @@ function calculateStats(pages) {
   let totalPrice = 0
   let expensiveCount = 0
   let foodAmount = 0
+  const byCategory = {} // 按类目统计
+  const items = [] // 新增：消费项目列表
 
   for (const page of pages) {
     const price = page.properties['价格']?.number || 0
-    const category = page.properties['类目']?.select?.name || ''
+    const category = page.properties['类目']?.select?.name || '其他'
+    const title = page.properties['标题']?.title?.[0]?.plain_text ||
+                  page.properties['Name']?.title?.[0]?.plain_text || '未命名'
 
     totalPrice += price
     if (price > 500) expensiveCount++
     if (category === '餐饮') foodAmount += price
+
+    // 累计各类目金额
+    byCategory[category] = (byCategory[category] || 0) + price
+
+    // 新增：记录每一笔消费（用于 AI 分析）
+    items.push({
+      title: title,
+      price: Math.round(price * 100) / 100,
+      category: category
+    })
   }
+
+  // 转换为数组格式，按金额排序
+  const categories = Object.entries(byCategory)
+    .map(([name, amount]) => ({
+      name,
+      amount: Math.round(amount * 100) / 100
+    }))
+    .sort((a, b) => b.amount - a.amount)
 
   return {
     totalPrice: Math.round(totalPrice * 100) / 100,
     expensiveCount,
     foodAmount: Math.round(foodAmount * 100) / 100,
-    nonFoodAmount: Math.round((totalPrice - foodAmount) * 100) / 100
+    nonFoodAmount: Math.round((totalPrice - foodAmount) * 100) / 100,
+    categories,
+    items: items.sort((a, b) => b.price - a.price).slice(0, 20) // 返回前20笔最大消费
   }
 }
 

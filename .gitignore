@@ -1,0 +1,27 @@
+# Claude AI 工作目录
+.claude/
+
+# 本地配置（包含真实密钥的文件）
+.env
+*.local.js
+config.local.js
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Wrangler
+.wrangler/
+.dev.vars
